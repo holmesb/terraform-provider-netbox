@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/fbreckle/go-netbox/netbox/client"
+	"github.com/holmesb/go-netbox/netbox/client"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )

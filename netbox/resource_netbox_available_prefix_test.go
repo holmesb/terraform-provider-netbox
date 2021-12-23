@@ -5,9 +5,9 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/fbreckle/go-netbox/netbox/client"
-	"github.com/fbreckle/go-netbox/netbox/client/ipam"
-	"github.com/fbreckle/go-netbox/netbox/models"
+	"github.com/holmesb/go-netbox/netbox/client"
+	"github.com/holmesb/go-netbox/netbox/client/ipam"
+	"github.com/holmesb/go-netbox/netbox/models"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	log "github.com/sirupsen/logrus"

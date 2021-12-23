@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/fbreckle/go-netbox/netbox/client"
-	"github.com/fbreckle/go-netbox/netbox/client/virtualization"
-	"github.com/fbreckle/go-netbox/netbox/models"
+	"github.com/holmesb/go-netbox/netbox/client"
+	"github.com/holmesb/go-netbox/netbox/client/virtualization"
+	"github.com/holmesb/go-netbox/netbox/models"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"

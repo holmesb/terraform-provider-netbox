@@ -3,9 +3,9 @@ package netbox
 import (
 	"fmt"
 
-	netboxclient "github.com/fbreckle/go-netbox/netbox/client"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/goware/urlx"
+	netboxclient "github.com/holmesb/go-netbox/netbox/client"
 	log "github.com/sirupsen/logrus"
 )
 

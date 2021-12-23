@@ -3,11 +3,10 @@ package netbox
 import (
 	"strconv"
 
-	"github.com/fbreckle/go-netbox/netbox/client"
-	"github.com/fbreckle/go-netbox/netbox/client/ipam"
-	"github.com/fbreckle/go-netbox/netbox/models"
+	"github.com/holmesb/go-netbox/netbox/client"
+	"github.com/holmesb/go-netbox/netbox/client/ipam"
+	"github.com/holmesb/go-netbox/netbox/models"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func resourceNetboxAvailableIPAddress() *schema.Resource {
@@ -18,42 +17,9 @@ func resourceNetboxAvailableIPAddress() *schema.Resource {
 		Delete: resourceNetboxAvailableIPAddressDelete,
 
 		Schema: map[string]*schema.Schema{
-			"prefix_id": &schema.Schema{
+			"vrf": &schema.Schema{
 				Type:     schema.TypeInt,
 				Required: true,
-			},
-			"ip_address": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"interface_id": &schema.Schema{
-				Type:     schema.TypeInt,
-				Optional: true,
-			},
-			"vrf_id": &schema.Schema{
-				Type:     schema.TypeInt,
-				Optional: true,
-			},
-			"tenant_id": &schema.Schema{
-				Type:     schema.TypeInt,
-				Optional: true,
-			},
-			"status": &schema.Schema{
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validation.StringInSlice([]string{"active", "reserved", "deprecated", "dhcp"}, false),
-			},
-			"dns_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"tags": &schema.Schema{
-				Type: schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Optional: true,
-				Set:      schema.HashString,
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -65,7 +31,7 @@ func resourceNetboxAvailableIPAddress() *schema.Resource {
 func resourceNetboxAvailableIPAddressCreate(d *schema.ResourceData, m interface{}) error {
 
 	api := m.(*client.NetBoxAPI)
-	data := models.WritableIPAddress{}
+	data := models.AvailableIP{}
 	prefix_id := int64(d.Get("prefix_id").(int))
 
 	// Get all the available IPs from the given prefix
@@ -73,16 +39,20 @@ func resourceNetboxAvailableIPAddressCreate(d *schema.ResourceData, m interface{
 	//	ID:      prefix_id,
 	//	Context: context.Background(),
 	//}
-
-	prefix = &prefix_id
-	params := ipam.NewIpamPrefixesAvailableIpsCreateParams().WithData(&data)
+	//data.Vrf
+	//prefix = &prefix_id
+	ips, err := api.Ipam.IpamPrefixesAvailableIpsCreate(
+		ipam.NewIpamPrefixesAvailableIpsCreateParams().WithID(1),
+		nil,
+	)
+	params := ipam.NewIpamPrefixesAvailableIpsCreateParams().WithID(2)
 	res, err := api.Ipam.IpamPrefixesAvailableIpsCreate(params, nil)
 	if err != nil {
 		return err
 	}
 	payload := res.GetPayload()
 	d.SetId(strconv.FormatInt(payload.ID, 10))
-	d.Set("prefix", payload.)
+	//d.Set("prefix", payload.)
 	//resp, err := api.Ipam.IpamPrefixesAvailableIpsRead(ipsread, nil)
 
 	//if err != nil {

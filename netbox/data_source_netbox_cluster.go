@@ -4,9 +4,9 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/fbreckle/go-netbox/netbox/client"
-	"github.com/fbreckle/go-netbox/netbox/client/virtualization"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/holmesb/go-netbox/netbox/client"
+	"github.com/holmesb/go-netbox/netbox/client/virtualization"
 )
 
 func dataSourceNetboxCluster() *schema.Resource {
