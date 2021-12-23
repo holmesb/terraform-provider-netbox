@@ -1,9 +1,6 @@
 package netbox
 
 import (
-	"context"
-	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/fbreckle/go-netbox/netbox/client"
@@ -68,43 +65,53 @@ func resourceNetboxAvailableIPAddress() *schema.Resource {
 func resourceNetboxAvailableIPAddressCreate(d *schema.ResourceData, m interface{}) error {
 
 	api := m.(*client.NetBoxAPI)
+	data := models.WritableIPAddress{}
 	prefix_id := int64(d.Get("prefix_id").(int))
 
 	// Get all the available IPs from the given prefix
-	ipsread := &ipam.IpamPrefixesAvailableIpsReadParams{
-		ID:      prefix_id,
-		Context: context.Background(),
-	}
+	//ipsread := &ipam.IpamPrefixesAvailableIpsReadParams{
+	//	ID:      prefix_id,
+	//	Context: context.Background(),
+	//}
 
-	resp, err := api.Ipam.IpamPrefixesAvailableIpsRead(ipsread, nil)
-
-	if err != nil {
-		return errors.New(fmt.Sprintf("Problem getting IPs from prefix %d: %v", prefix_id, err))
-	}
-
-	data := models.WritableIPAddress{}
-	// Use the first Payload Address as our data.Address value
-	data.Address = &resp.Payload[0].Address
-	data.Status = d.Get("status").(string)
-
-	if dnsName, ok := d.GetOk("dns_name"); ok {
-		data.DNSName = dnsName.(string)
-	}
-
-	data.Tags, _ = getNestedTagListFromResourceDataSet(api, d.Get("tags"))
-
-	params := ipam.NewIpamIPAddressesCreateParams().WithData(&data)
-
-	res, err := api.Ipam.IpamIPAddressesCreate(params, nil)
+	prefix = &prefix_id
+	params := ipam.NewIpamPrefixesAvailableIpsCreateParams().WithData(&data)
+	res, err := api.Ipam.IpamPrefixesAvailableIpsCreate(params, nil)
 	if err != nil {
 		return err
 	}
+	payload := res.GetPayload()
+	d.SetId(strconv.FormatInt(payload.ID, 10))
+	d.Set("prefix", payload.)
+	//resp, err := api.Ipam.IpamPrefixesAvailableIpsRead(ipsread, nil)
 
-	// Since we generated the ip_address set that now
-	d.Set("ip_address", res.Payload.Address)
-	d.SetId(strconv.FormatInt(res.GetPayload().ID, 10))
+	//if err != nil {
+	//	return errors.New(fmt.Sprintf("Problem getting IPs from prefix %d: %v", prefix_id, err))
+	//}
 
-	return resourceNetboxAvailableIPAddressUpdate(d, m)
+	//data := models.WritableIPAddress{}
+	//// Use the first Payload Address as our data.Address value
+	//data.Address = &resp.Payload[0].Address
+	//data.Status = d.Get("status").(string)
+
+	//if dnsName, ok := d.GetOk("dns_name"); ok {
+	//	data.DNSName = dnsName.(string)
+	//}
+
+	//data.Tags, _ = getNestedTagListFromResourceDataSet(api, d.Get("tags"))
+
+	//params := ipam.NewIpamIPAddressesCreateParams().WithData(&data)
+
+	//res, err := api.Ipam.IpamIPAddressesCreate(params, nil)
+	//if err != nil {
+	//	return err
+	//}
+
+	//// Since we generated the ip_address set that now
+	//d.Set("ip_address", res.Payload.Address)
+	//d.SetId(strconv.FormatInt(res.GetPayload().ID, 10))
+
+	//return resourceNetboxAvailableIPAddressUpdate(d, m)
 }
 
 func resourceNetboxAvailableIPAddressRead(d *schema.ResourceData, m interface{}) error {
